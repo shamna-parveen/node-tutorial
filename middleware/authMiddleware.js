@@ -11,6 +11,7 @@ const loginDetailRepo = new LoginDetailsRepository();
 const protect = async (req, res, next) => {
   // Extract the Authorization header from the request
   const authHeader = req.headers["authorization"];
+  console.log("authHeader","authHeader",authHeader);
   if (!authHeader) {
     // If no Authorization header is present, return Unauthorized status
     return res.status(401).json({ message: "Unauthorized" });
@@ -18,6 +19,8 @@ const protect = async (req, res, next) => {
   // Extract the JWT token from the Authorization header
   const token = authHeader.split(" ")[1];
   if (!token) {
+    console.log("token","token",token);
+
     // If no token is found, return Unauthorized status
     return res.status(401).json({ message: "Unauthorized" });
   }
@@ -33,6 +36,8 @@ const protect = async (req, res, next) => {
         // Find the user based on the retrieved user ID
         const user = await authRepo.findById(userId);
         if (!user) {
+          console.log("user","user",user);
+
           // If user not found, return Unauthorized status
           return res.status(401).json({ message: "Unauthorized" });
         }
@@ -44,6 +49,7 @@ const protect = async (req, res, next) => {
         // Continue with the next middleware or route handler
         next();
       } else {
+        console.log("somethingg 4444444444");
         // If decoding fails, return Unauthorized status
         return res.status(401).json({ message: "Unauthorized" });
       }
@@ -52,6 +58,7 @@ const protect = async (req, res, next) => {
       return res.status(401).json({ message: " login details not found" });
     }
   } catch (error) {
+    console.log("error","error",error);
     // If an error occurs during token verification, return Unauthorized status
     return res.status(401).json({ message: "Unauthorized" });
   }
