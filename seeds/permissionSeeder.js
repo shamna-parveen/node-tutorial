@@ -30,24 +30,24 @@ const permissionSeeder = () => {
     },
 
     {
-      name: "category-create",
-      display_name: "Create Category",
-      category: "Category",
+      name: "product-create",
+      display_name: "Create product",
+      category: "product",
     },
     {
-      name: "category-view",
-      display_name: "View Category",
-      category: "Category",
+      name: "product-view",
+      display_name: "View product",
+      category: "product",
     },
     {
-      name: "category-update",
-      display_name: "Update Category",
-      category: "Category",
+      name: "product-update",
+      display_name: "Update product",
+      category: "product",
     },
     {
-      name: "category-delete",
-      display_name: "Delete Category",
-      category: "Category",
+      name: "product-delete",
+      display_name: "Delete product",
+      category: "product",
     },
   ];
 

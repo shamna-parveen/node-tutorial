@@ -8,7 +8,6 @@ const employeeSeeder = () => {
     email: "info@exampl.com",
     password: "Admin123,.",
     role: "Super Admin",
-    guard: "admin",
   };
 
   const seedEmployee = async () => {
@@ -16,15 +15,6 @@ const employeeSeeder = () => {
       email: employee.email,
     });
     if (!existingEmployee) {
-      const existingRole = await Role.findOne({
-        name: employee.role,
-      });
-      if (!existingRole) {
-        const role = new Role({
-          name: employee.role,
-        });
-        role.save();
-      }
       const newEmployee = new Employee(employee);
       await newEmployee.save();
     }
