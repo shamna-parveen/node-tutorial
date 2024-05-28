@@ -34,6 +34,7 @@ const protect = async (req, res, next) => {
         req.session.user = {
           id: userData._id,
           email: userData.email,
+          role:userData.role
         };
 
         next();
@@ -41,7 +42,7 @@ const protect = async (req, res, next) => {
         return res.status(401).json({ message: "Unauthorized" });
       }
     } else {
-      return res.status(401).json({ message: "Login details not found" });
+      return res.status(401).json({ message: "Unauthorized" });
     }
   } catch (error) {
     console.error("Error:", error);
