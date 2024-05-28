@@ -80,7 +80,7 @@ export default class UserController {
    *         description: Unauthenticated
    */
   async registerUser(req, res) {
-    if (req.session.user.pauth == "Super Admin") {
+    if (req.session.user.role == "Super Admin") {
       try {
         const validatedData = await new addUserRequest(req).validate();
         const employeeDetails = await userRepo.addEmployee(validatedData);
