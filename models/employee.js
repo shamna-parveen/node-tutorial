@@ -18,7 +18,7 @@ const employeeSchema = mongoose.Schema(
     },
     role: {
       type: String,
-      required: true,
+      required: false,
     },
   },
   {

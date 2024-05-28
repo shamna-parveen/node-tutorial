@@ -17,6 +17,19 @@ export default class UserRepository {
           newEmployee[key] = data[key]
       })
       newEmployee.save()
+      console.log(newEmployee);
       return newEmployee
   }
+  /**
+     * Get Employee By Mail
+     * @param String email
+     * @return Employee employee
+     */
+  async getEmployeeByEmail(email) {
+    const employee = await Employee.findOne({ email: email })
+    if (employee) {
+        return employee
+    }
+    return employee
+}
 }

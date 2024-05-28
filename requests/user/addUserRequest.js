@@ -1,6 +1,6 @@
 import Joi from 'joi'
 import userRepository from "../../repositories/userRepository.js"
-
+import bcryptPassword from  "../../utils/bcryptPassword.js"
 class AddEmployeeRequest {
     static employeeRepo = new userRepository()
 
@@ -17,14 +17,18 @@ class AddEmployeeRequest {
             'any.required': 'Please enter a valid email address.',
             'string.email': 'Please enter a valid email address.',
         }),
+        password: Joi.string().required().messages({
+            'string.empty': 'Password is required.',
+            'any.required': 'Password is required.',
+          }),
         
     })
 
     constructor(req) {
         this.data = {
-            name: req.body.name,
-            email: req.body.email,
-            password:bcryptPassword(req.body.password)
+            name: req.query.name,
+            email: req.query.email,
+            password:req.query.password
         }
     }
 
