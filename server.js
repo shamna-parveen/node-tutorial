@@ -5,7 +5,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerJsdoc from "swagger-jsdoc";
 import authRoutes from "./routes/authRoutes.js";
 import swagger from './config/swagger.js'
-import userRoutes from "./routes/userRoute.js";
+import userRoutes from "./routes/userRoutes.js";
 
 dotenv.config();
 

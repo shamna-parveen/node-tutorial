@@ -18,8 +18,12 @@ const employeeSchema = mongoose.Schema(
     },
     role: {
       type: String,
-      required: true,
+      required: false,
     },
+    permissions: {
+      type: [String],  // Explicitly defining the permissions as an array of strings
+      required: false,
+    }
   },
   {
     timestamps: true,
