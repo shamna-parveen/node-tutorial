@@ -1,6 +1,7 @@
 import Employee from '../models/employee.js';
 
 export default class UserRepository {
+  /**find by id  */
   async findById(userId) {
     const user = await Employee.findById(userId);
     return user;
