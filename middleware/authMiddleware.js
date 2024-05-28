@@ -30,13 +30,11 @@ const protect = async (req, res, next) => {
         if (!req.session) {
           req.session = {}; // Ensure req.session is initialized
         }
-
         req.session.user = {
           id: userData._id,
           email: userData.email,
-          role:userData.role
+          permission:userData.permissions
         };
-
         next();
       } else {
         return res.status(401).json({ message: "Unauthorized" });

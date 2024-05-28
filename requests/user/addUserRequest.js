@@ -1,5 +1,6 @@
 import Joi from "joi";
 import userRepository from "../../repositories/userRepository.js";
+
 class AddEmployeeRequest {
   static employeeRepo = new userRepository();
 
@@ -20,42 +21,57 @@ class AddEmployeeRequest {
       "string.empty": "Password is required.",
       "any.required": "Password is required.",
     }),
+    permissions: Joi.array().items(Joi.string()).optional(), // Add permissions field
+  
   });
 
   constructor(req) {
+    this.req = req;
     this.data = {
       name: req.query.name,
       email: req.query.email,
       password: req.query.password,
+      permissions: req.query.permission
     };
   }
 
-  async validate() { 
-    const { error, value } = AddEmployeeRequest.schema.validate(this.data, {
-      abortEarly: false,
-    });
-    /**
-     * Check email exist or not
-     */
-    const checkEmailExists =
-      await AddEmployeeRequest.employeeRepo.getEmployeeByEmail(this.data.email);
+  async validate() {
+    console.log(this.req.session );
+    // Check for necessary permissions in session
+    if (
+      !this.req.session ||
+      !this.req.session.user.permission.includes("employee-create")
+    ) {
+      throw { permissions: "You do not have permission to add an employee." };
+    } else {
+      // Validate input data
+      const { error, value } = AddEmployeeRequest.schema.validate(this.data, {
+        abortEarly: false,
+      });
+      // Check if email already exists
+      const checkEmailExists =
+        await AddEmployeeRequest.employeeRepo.getEmployeeByEmail(
+          this.data.email
+        );
 
-    if (error || checkEmailExists) {
-      const validationErrors = {};
-      error
-        ? error.details.forEach((err) => {
-            validationErrors[err.context.key] = err.message;
-          })
-        : [];
+      if (error || checkEmailExists) {
+        const validationErrors = {};
+        error
+          ? error.details.forEach((err) => {
+              validationErrors[err.context.key] = err.message;
+            })
+          : [];
 
-      if (checkEmailExists !== null) {
-        validationErrors["email"] =
-          "Email id is already taken. Try another one.";
+        if (checkEmailExists !== null) {
+          validationErrors["email"] =
+            "Email id is already taken. Try another one.";
+        }
+
+        throw validationErrors;
       }
 
-      throw validationErrors;
+      return value;
     }
-    return value;
   }
 }
 

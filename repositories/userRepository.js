@@ -18,7 +18,6 @@ export default class UserRepository {
           newEmployee[key] = data[key]
       })
       newEmployee.save()
-      console.log(newEmployee);
       return newEmployee
   }
   /**

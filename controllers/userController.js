@@ -80,9 +80,9 @@ export default class UserController {
    *         description: Unauthenticated
    */
   async registerUser(req, res) {
-    if (req.session.user.role == "Super Admin") {
       try {
         const validatedData = await new addUserRequest(req).validate();
+        validatedData['permissions']= ["product-create","product-view","product-delete","product-update"];
         const employeeDetails = await userRepo.addEmployee(validatedData);
         if (employeeDetails) {
           res.status(200).json({
@@ -105,12 +105,6 @@ export default class UserController {
           errors: error,
         });
       }
-    } else {
-      res.json({
-        status: false,
-        message: "Super admin can only register the employee",
-        data: [],
-      });
-    }
+    
   }
 }
