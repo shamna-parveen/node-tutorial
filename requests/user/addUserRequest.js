@@ -36,7 +36,6 @@ class AddEmployeeRequest {
   }
 
   async validate() {
-    console.log(this.req.session );
     // Check for necessary permissions in session
     if (
       !this.req.session ||

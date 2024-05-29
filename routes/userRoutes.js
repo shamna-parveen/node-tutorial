@@ -10,6 +10,7 @@ const user = new UserController()
 
 router.route('/get').get(protect, user.getUserProfile)
 router.route("/add").post(protect,user.registerUser);
+router.route("/update").post(protect,user.updateUser);
 
 
 export default router;
