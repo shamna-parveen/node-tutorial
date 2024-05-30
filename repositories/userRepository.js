@@ -57,4 +57,13 @@ export default class UserRepository {
     async getEmployee(employeeId) {
       return Employee.findById(employeeId).populate('role_id')
   }
+  async getAllEmployees() {
+    try {
+      // Fetch all employees
+      const employees = await Employee.find().populate("role_id");
+      return employees;
+    } catch (error) {
+      throw error;
+    }
+  }
 }

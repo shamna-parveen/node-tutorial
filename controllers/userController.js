@@ -3,7 +3,7 @@ import addUserRequest from "../requests/user/addUserRequest.js";
 import UpdateEmployeeRequest from "../requests/user/updateUserRequest.js";
 import checkPermissions from "../utils/checkPermission.js";
 import UserResponse from "../responses/userResponse.js";
-import getUserRequest from "../requests/user/getUserRequest.js"
+import getUserRequest from "../requests/user/getUserRequest.js";
 const userRepo = new userRepository();
 
 export default class UserController {
@@ -200,59 +200,114 @@ export default class UserController {
     }
   }
   /**
- * Get Customer
- *
- * @swagger
- * /users/get_user:
- *   post:
- *     tags:
- *       - Users
- *     summary: Get user by id
- *     security:
- *       - jwt: []
- *     produces:
- *       - application/json
- *     parameters:
- *       - in: query
- *         name: id
- *         type: string
- *         description: Enter employee id
- *     responses:
- *       200:
- *         description: Success
- *       422:
- *         description: Unprocessable Entity
- *       401:
- *         description: Unauthenticated
- */
+   * Get Customer
+   *
+   * @swagger
+   * /users/get_user:
+   *   post:
+   *     tags:
+   *       - Users
+   *     summary: Get user by id
+   *     security:
+   *       - jwt: []
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - in: query
+   *         name: id
+   *         type: string
+   *         description: Enter employee id
+   *     responses:
+   *       200:
+   *         description: Success
+   *       422:
+   *         description: Unprocessable Entity
+   *       401:
+   *         description: Unauthenticated
+   */
   async getUser(req, res) {
     const employeeRequest = new getUserRequest(req);
 
     try {
-        const validatedData = await employeeRequest.validate();
-        const customerData = await userRepo.getEmployee(validatedData.id);
+      const validatedData = await employeeRequest.validate();
+      const customerData = await userRepo.getEmployee(validatedData.id);
 
-        if (customerData) {
-            const customerDetails = await UserResponse.format(customerData);
-            res.status(200).json({
-                status: true,
-                message: 'user data fetched successfully.',
-                data: customerDetails,
-            });
-        } else {
-            res.status(200).json({
-                status: false,
-                message: 'Failed to get customer.',
-                data: [],
-            });
-        }
-    } catch (error) {
-        res.status(422).json({
-            status: false,
-            message: 'Failed to get customer.',
-            errors: error,
+      if (customerData) {
+        res.status(200).json({
+          status: true,
+          message: "user data fetched successfully.",
+          data: await UserResponse.format(customerData),
         });
+      } else {
+        res.status(200).json({
+          status: false,
+          message: "Failed to get customer.",
+          data: [],
+        });
+      }
+    } catch (error) {
+      res.status(422).json({
+        status: false,
+        message: "Failed to get customer.",
+        errors: error,
+      });
     }
+  }
+  /**
+   * List users
+   *
+   * @swagger
+   * /users/list:
+   *   post:
+   *     tags:
+   *       - Users
+   *     summary: List Customer
+   *     security:
+   *       - jwt: []
+   *     produces:
+   *       - application/json
+   *     responses:
+   *       200:
+   *         description: Success
+   *       422:
+   *         description: Unprocessable Entity
+   *       401:
+   *         description: Unauthenticated
+   */
+  async listAllEmployee(req, res) {
+    try {
+      const user =req.session.user;
+      const hasPermission = await checkPermissions(user, "employee-view");
+      if (!hasPermission) {
+        throw {
+          permissions: "You do not have permission to perform this action.",
+        };
+      }
+      const employees = await userRepo.getAllEmployees();
+      if (employees && employees.length > 0) {
+        const employeeData = await Promise.all(
+          employees.map(async (employee) => await UserResponse.format(employee))
+        );
 
-}
+        res.status(200).json({
+          status: true,
+          message: "Employees data fetched successfully.",
+          data: { employees: employeeData },
+        });
+      } else {
+        res.status(200).json({
+          status: false,
+          message: "No employees found.",
+          data: [],
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(422).json({
+        status: false,
+        message: "Failed to list employees.",
+        errors: error,
+      });
+    }
+  }
 }
