@@ -1,6 +1,6 @@
 import Joi from "joi";
 import userRepository from "../../repositories/userRepository.js";
-
+import checkPermissions from "../../utils/checkPermission.js";
 class AddEmployeeRequest {
   static employeeRepo = new userRepository();
 
@@ -21,8 +21,7 @@ class AddEmployeeRequest {
       "string.empty": "Password is required.",
       "any.required": "Password is required.",
     }),
-    permissions: Joi.array().items(Joi.string()).optional(), // Add permissions field
-  
+    role_id: Joi.string().optional(), // Add permissions field
   });
 
   constructor(req) {
@@ -31,18 +30,13 @@ class AddEmployeeRequest {
       name: req.query.name,
       email: req.query.email,
       password: req.query.password,
-      permissions: req.query.permission
+      role_id: req.query.role_id,
     };
   }
 
   async validate() {
-    // Check for necessary permissions in session
-    if (
-      !this.req.session ||
-      !this.req.session.user.permission.includes("employee-create")
-    ) {
-      throw { permissions: "You do not have permission to add an employee." };
-    } else {
+    if (checkPermissions("employee-create")) {
+      console.log("innaaaa");
       // Validate input data
       const { error, value } = AddEmployeeRequest.schema.validate(this.data, {
         abortEarly: false,
@@ -70,6 +64,8 @@ class AddEmployeeRequest {
       }
 
       return value;
+    } else {
+      throw { permissions: "You do not have permission to add an employee." };
     }
   }
 }

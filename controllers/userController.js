@@ -1,5 +1,3 @@
-import asyncHandler from "express-async-handler";
-import User from "../models/employee.js";
 import userRepository from "../repositories/userRepository.js";
 import addUserRequest from "../requests/user/addUserRequest.js";
 import UpdateEmployeeRequest from "../requests/user/updateUserRequest.js";
@@ -45,42 +43,47 @@ export default class UserController {
 
   //
   /**
-   * @swagger
-   * /users/add:
-   *   post:
-   *     tags:
-   *       - Users
-   *     summary: Register New User
-   *     produces:
-   *       - application/json
-   *     security:
-   *       - jwt: []
-   *     parameters:
-   *        - in: query
-   *          name: name
-   *          description: User name
-   *          type: string
-   *        - in: query
-   *          name: email
-   *          description: User email address
-   *          type: string
-   *        - in: query
-   *          name: password
-   *          description: Your password
-   *          type: string
-   *        - in: query
-   *          name: password_confirmation
-   *          description: Confrim Your password
-   *          type: string
-   *     responses:
-   *       200:
-   *         description: Success
-   *       422:
-   *         description: Unprocessable Entity
-   *       401:
-   *         description: Unauthenticated
-   */
-  async registerUser(req, res) {
+ * @swagger
+ * /users/add:
+ *   post:
+ *     tags:
+ *       - Users
+ *     summary: Register New User
+ *     produces:
+ *       - application/json
+ *     security:
+ *       - jwt: []
+ *     parameters:
+ *       - in: query
+ *         name: name
+ *         description: User name
+ *         type: string
+ *       - in: query
+ *         name: email
+ *         description: User email address
+ *         type: string
+ *       - in: query
+ *         name: role_id
+ *         description: Enter role id
+ *         type: string
+ *       - in: query
+ *         name: password
+ *         description: Your password
+ *         type: string
+ *       - in: query
+ *         name: password_confirmation
+ *         description: Confirm Your password
+ *         type: string
+ *     responses:
+ *       200:
+ *         description: Success
+ *       422:
+ *         description: Unprocessable Entity
+ *       401:
+ *         description: Unauthenticated
+ */
+
+   async registerUser(req, res) {
     try {
       const validatedData = await new addUserRequest(req).validate();
       validatedData["permissions"] = [
