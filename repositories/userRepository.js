@@ -18,17 +18,17 @@ export default class UserRepository {
       newEmployee[key] = data[key];
     });
     newEmployee.save();
-    return newEmployee;
+    return newEmployee.populate("role_id");
   }
   /**
    * Get Employee By Mail
-   * @param String email
+   * 
    * @return Employee employee
    */
   async getEmployeeByEmail(email) {
     const employee = await Employee.findOne({ email: email });
     if (employee) {
-      return employee;
+      return employee.populate("role_id");
     }
     return employee;
   }
@@ -47,6 +47,14 @@ export default class UserRepository {
     Object.assign(employeeData, employeeDetails);
     await employeeData.save();
 
-    return employeeData
+    return employeeData.populate("role_id");
+  }
+    /**
+     * Get Employee
+     * @param String employeeId
+     * @return Employee
+     */
+    async getEmployee(employeeId) {
+      return Employee.findById(employeeId).populate('role_id')
   }
 }

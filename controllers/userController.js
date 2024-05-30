@@ -2,7 +2,8 @@ import userRepository from "../repositories/userRepository.js";
 import addUserRequest from "../requests/user/addUserRequest.js";
 import UpdateEmployeeRequest from "../requests/user/updateUserRequest.js";
 import checkPermissions from "../utils/checkPermission.js";
-// const loginDetailsRepo = new LoginDetailsRepository();
+import UserResponse from "../responses/userResponse.js";
+import getUserRequest from "../requests/user/getUserRequest.js"
 const userRepo = new userRepository();
 
 export default class UserController {
@@ -108,7 +109,7 @@ export default class UserController {
         res.status(200).json({
           status: true,
           message: "Employee data added successfully.",
-          data: [],
+          data: await UserResponse.format(employeeDetails),
         });
       } else {
         res.status(422).json({
@@ -118,7 +119,6 @@ export default class UserController {
         });
       }
     } catch (error) {
-      console.log(error);
       res.status(422).json({
         status: false,
         message: "Failed to add employee.",
@@ -151,6 +151,10 @@ export default class UserController {
    *         type: string
    *         description: User email address
    *       - in: query
+   *         name: role_id
+   *         description: Enter role id
+   *         type: string
+   *       - in: query
    *         name: password
    *         type: string
    *         description: Your password
@@ -178,7 +182,7 @@ export default class UserController {
         res.status(200).json({
           status: true,
           message: "Employee data updated successfully.",
-          data: employeeData,
+          data: await UserResponse.format(updatedEmployee),
         });
       } else {
         res.status(200).json({
@@ -188,7 +192,6 @@ export default class UserController {
         });
       }
     } catch (error) {
-      console.log(error);
       res.status(422).json({
         status: false,
         message: "Unable to update employee.",
@@ -196,4 +199,60 @@ export default class UserController {
       });
     }
   }
+  /**
+ * Get Customer
+ *
+ * @swagger
+ * /users/get_user:
+ *   post:
+ *     tags:
+ *       - Users
+ *     summary: Get user by id
+ *     security:
+ *       - jwt: []
+ *     produces:
+ *       - application/json
+ *     parameters:
+ *       - in: query
+ *         name: id
+ *         type: string
+ *         description: Enter employee id
+ *     responses:
+ *       200:
+ *         description: Success
+ *       422:
+ *         description: Unprocessable Entity
+ *       401:
+ *         description: Unauthenticated
+ */
+  async getUser(req, res) {
+    const employeeRequest = new getUserRequest(req);
+
+    try {
+        const validatedData = await employeeRequest.validate();
+        const customerData = await userRepo.getEmployee(validatedData.id);
+
+        if (customerData) {
+            const customerDetails = await UserResponse.format(customerData);
+            res.status(200).json({
+                status: true,
+                message: 'user data fetched successfully.',
+                data: customerDetails,
+            });
+        } else {
+            res.status(200).json({
+                status: false,
+                message: 'Failed to get customer.',
+                data: [],
+            });
+        }
+    } catch (error) {
+        res.status(422).json({
+            status: false,
+            message: 'Failed to get customer.',
+            errors: error,
+        });
+    }
+
+}
 }

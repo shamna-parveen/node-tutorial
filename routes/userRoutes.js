@@ -11,6 +11,8 @@ const user = new UserController()
 router.route('/get').get(protect, user.getUserProfile)
 router.route("/add").post(protect,user.registerUser);
 router.route("/update").post(protect,user.updateUser);
+router.route("/get_user").post(protect,user.getUser);
+
 
 
 export default router;

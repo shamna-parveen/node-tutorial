@@ -2,7 +2,6 @@ import Role from "../models/role.js";
 
 const checkPermissions = async (user, requiredPermission) => {
   if (user) {
-    console.log(user);
     try {
       const role = await Role.findOne({ _id: user.role_id });
       if (role) {
