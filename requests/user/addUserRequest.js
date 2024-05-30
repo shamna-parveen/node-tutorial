@@ -37,7 +37,6 @@ class AddEmployeeRequest {
 
   async validate() {
     const user = this.req.session.user;
-    console.log(user);
     const hasPermission = await checkPermissions(user, "employee-create");
 console.log(hasPermission);
     if (hasPermission) {

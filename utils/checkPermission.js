@@ -1,13 +1,10 @@
 import Role from "../models/role.js";
 
 const checkPermissions = async (user, requiredPermission) => {
-    console.log("hiiiiiiiii");
   if (user) {
     console.log(user);
     try {
       const role = await Role.findOne({ _id: user.role_id });
-      console.log(role,"roleeee");
-
       if (role) {
         if (role.name === 'Super Admin') {
           return true; // Super Admin has all permissions
