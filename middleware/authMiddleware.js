@@ -6,8 +6,6 @@ const authRepo = new userRepository();
 const loginDetailRepo = new LoginDetailsRepository();
 
 const protect = async (req, res, next) => {
-  console.log("Request Headers:", req.headers);  // Log all request headers
-
   const authHeader = req.headers["authorization"];
   if (!authHeader) {
 
@@ -62,10 +60,8 @@ const protect = async (req, res, next) => {
       req.session.user = {
         id: userData._id,
         email: userData.email,
-        permission: userData.permissions
+        role_id:userData.role_id,
       };
-      console.log(userData);
-      console.log(req.session.user);
       next();
 
     } else {

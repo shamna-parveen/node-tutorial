@@ -1,6 +1,7 @@
 import Joi from "joi";
 import userRepository from "../../repositories/userRepository.js";
 import checkPermissions from "../../utils/checkPermission.js";
+
 class AddEmployeeRequest {
   static employeeRepo = new userRepository();
 
@@ -35,8 +36,11 @@ class AddEmployeeRequest {
   }
 
   async validate() {
-    if (checkPermissions("employee-create")) {
-      console.log("innaaaa");
+    const user = this.req.session.user;
+    console.log(user);
+    const hasPermission = await checkPermissions(user, "employee-create");
+console.log(hasPermission);
+    if (hasPermission) {
       // Validate input data
       const { error, value } = AddEmployeeRequest.schema.validate(this.data, {
         abortEarly: false,
@@ -49,11 +53,11 @@ class AddEmployeeRequest {
 
       if (error || checkEmailExists) {
         const validationErrors = {};
-        error
-          ? error.details.forEach((err) => {
-              validationErrors[err.context.key] = err.message;
-            })
-          : [];
+        if (error) {
+          error.details.forEach((err) => {
+            validationErrors[err.context.key] = err.message;
+          });
+        }
 
         if (checkEmailExists !== null) {
           validationErrors["email"] =
