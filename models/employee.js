@@ -23,7 +23,13 @@ const employeeSchema = mongoose.Schema(
     permissions: {
       type: [String],  // Explicitly defining the permissions as an array of strings
       required: false,
-    }
+    },
+    role_id: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Role',
+      required: true,
+  },
+    
   },
   {
     timestamps: true,
