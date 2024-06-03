@@ -66,4 +66,17 @@ export default class UserRepository {
       throw error;
     }
   }
+  /**
+     * Delete Employee
+     * @param String employeeId
+     * @return Boolean true|false
+     */
+  async deleteEmployee(employeeId) {
+    const employeeData = await Employee.findById({ _id: employeeId })
+    if (!employeeData) {
+        return false
+    }
+    await Employee.deleteOne(employeeData)
+    return true
+}
 }

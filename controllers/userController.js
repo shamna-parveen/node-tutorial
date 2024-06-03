@@ -4,6 +4,7 @@ import UpdateEmployeeRequest from "../requests/user/updateUserRequest.js";
 import checkPermissions from "../utils/checkPermission.js";
 import UserResponse from "../responses/userResponse.js";
 import getUserRequest from "../requests/user/getUserRequest.js";
+import deleteUserRequest from "../requests/user/deleteUserRequest.js";
 const userRepo = new userRepository();
 
 export default class UserController {
@@ -200,7 +201,7 @@ export default class UserController {
     }
   }
   /**
-   * Get Customer
+   * Get user
    *
    * @swagger
    * /users/get_user:
@@ -276,7 +277,7 @@ export default class UserController {
    */
   async listAllEmployee(req, res) {
     try {
-      const user =req.session.user;
+      const user = req.session.user;
       const hasPermission = await checkPermissions(user, "employee-view");
       if (!hasPermission) {
         throw {
@@ -306,6 +307,58 @@ export default class UserController {
       res.status(422).json({
         status: false,
         message: "Failed to list employees.",
+        errors: error,
+      });
+    }
+  }
+  /**
+   * delete user
+   *
+   * @swagger
+   * /users/delete:
+   *   post:
+   *     tags:
+   *       - Users
+   *     summary: delete user by id
+   *     security:
+   *       - jwt: []
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - in: query
+   *         name: id
+   *         type: string
+   *         description: Enter employee id
+   *     responses:
+   *       200:
+   *         description: Success
+   *       422:
+   *         description: Unprocessable Entity
+   *       401:
+   *         description: Unauthenticated
+   */
+  async deleteUser(req, res) {
+    try {
+      const employeeRequest = new deleteUserRequest(req);
+      // const customerData = await userRepo.getEmployee(req.body);
+      const validatedData = await employeeRequest.validate();
+
+      const deleteData = await userRepo.deleteEmployee(validatedData.id);
+      if (deleteData) {
+        res.status(200).json({
+          status: true,
+          message: "user deleted successfully.",
+        });
+      } else {
+        res.status(200).json({
+          status: false,
+          message: "Unable to delete user.",
+        });
+      }
+    } catch (error) {
+      res.status(422).json({
+        status: false,
+        message: "Unable to delete user.",
         errors: error,
       });
     }
