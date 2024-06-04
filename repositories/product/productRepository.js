@@ -42,4 +42,32 @@ export default class ProductRepository {
       throw new Error(`Error finding product by name: ${error.message}`);
     }
   }
+  async findById(id) {
+    const product = await Product.findById(id);
+    return product;
+  }
+ 
+  async getProductFiles(productId) {
+    try {
+      return await ProductFile.find({ product_id: productId });
+    } catch (error) {
+      throw new Error(`Error retrieving product files: ${error.message}`);
+    }
+  }
+
+  async deleteProduct(productId) {
+    try {
+      return await Product.findByIdAndDelete(productId);
+    } catch (error) {
+      throw new Error(`Error deleting product: ${error.message}`);
+    }
+  }
+
+  async deleteProductFiles(productId) {
+    try {
+      return await ProductFile.deleteMany({ product_id: productId });
+    } catch (error) {
+      throw new Error(`Error deleting product files: ${error.message}`);
+    }
+  }
 }

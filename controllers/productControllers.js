@@ -1,5 +1,6 @@
-import AddProductRequest from '../requests/product/addProductRequest.js';
-import ProductRepository from '../repositories/product/productRepository.js';
+import AddProductRequest from "../requests/product/addProductRequest.js";
+import ProductRepository from "../repositories/product/productRepository.js";
+import DeleteProductRequest from "../requests/product/deleteproductRequest.js";
 
 const productRepo = new ProductRepository();
 
@@ -68,10 +69,71 @@ export default class productControllers {
 
       await productRepo.createProductFiles(productFiles);
 
-      res.status(201).json({ message: 'Product and images saved successfully' });
+      res
+        .status(201)
+        .json({ message: "Product and images saved successfully" });
     } catch (error) {
       console.log(error);
       res.status(400).json({ errors: error.message });
+    }
+  }
+  /**
+   * delete product
+   *
+   * @swagger
+   * /product/delete:
+   *   post:
+   *     tags:
+   *       - Products
+   *     summary: delete product by id
+   *     security:
+   *       - jwt: []
+   *     produces:
+   *       - application/json
+   *     parameters:
+   *       - in: query
+   *         name: id
+   *         type: string
+   *         description: Enter product id
+   *     responses:
+   *       200:
+   *         description: Success
+   *       422:
+   *         description: Unprocessable Entity
+   *       401:
+   *         description: Unauthenticated
+   */
+  async deleteProduct(req, res) {
+    try {
+      const deleteRequest = new DeleteProductRequest(req);
+      const validatedData = await deleteRequest.validate();
+
+      // Retrieve product files
+      const productFiles = await productRepo.getProductFiles(validatedData.id);
+
+      // Delete the product
+      const deleteData = await productRepo.deleteProduct(validatedData.id);
+      if (deleteData) {
+        // Delete product files after the product has been deleted
+        await productRepo.deleteProductFiles(validatedData.id);
+
+        res.status(200).json({
+          status: true,
+          message: "Product and associated files deleted successfully.",
+        });
+      } else {
+        res.status(200).json({
+          status: false,
+          message: "Unable to delete product.",
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(422).json({
+        status: false,
+        message: "Unable to delete product.",
+        errors: error,
+      });
     }
   }
 }

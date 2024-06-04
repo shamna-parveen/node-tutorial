@@ -8,5 +8,5 @@ const product = new productControllers();
 const router = express.Router();
 
 router.route("/add").post(protect, uploadProductImages, product.addProduct.bind(product));
-
+router.route("/delete").post(protect,product.deleteProduct)
 export default router;
