@@ -13,10 +13,6 @@ class AddProductRequest {
       'string.empty': 'Please enter the product name.',
       'any.required': 'Please enter the product name.',
     }),
-    creatable_id: Joi.number().required().messages({
-      'number.base': 'Please enter a valid creatable ID.',
-      'any.required': 'Please enter the creatable ID.',
-    }),
     images: Joi.array().items(Joi.object()).min(1).required().messages({
       'array.min': 'Please upload at least one image.',
       'any.required': 'Please upload at least one image.',
@@ -27,7 +23,6 @@ class AddProductRequest {
     this.req = req;
     this.data = {
       product_name: req.body.product_name,
-      creatable_id: req.body.creatable_id,
       images: req.files,
     };
   }
