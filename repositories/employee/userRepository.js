@@ -1,4 +1,4 @@
-import Employee from "../models/employee.js";
+import Employee from "../../models/employee.js";
 
 export default class UserRepository {
   /**find by id  */

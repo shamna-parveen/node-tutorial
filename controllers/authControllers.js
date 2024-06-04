@@ -1,8 +1,8 @@
 import asyncHandler from "express-async-handler";
 import User from "../models/employee.js";
 import generateToken from "../utils/generateToken.js";
-import LoginDetailsRepository from "../repositories/loginDetailsRepository.js";
-import UserRepository from "../repositories/userRepository.js"; // Ensure the correct case for the class name
+import LoginDetailsRepository from "../repositories/auth/LoginDetailsRepository.js";
+import UserRepository from "../repositories/employee/userRepository.js"; // Ensure the correct case for the class name
 import { loginValidation } from "../requests/auth/loginRequest.js";
 import UserResponse from "../responses/userResponse.js";
 

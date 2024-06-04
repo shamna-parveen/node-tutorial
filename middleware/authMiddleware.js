@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import userRepository from "../repositories/userRepository.js";
-import LoginDetailsRepository from "../repositories/loginDetailsRepository.js";
+import userRepository from "../repositories/employee/userRepository.js";
+import LoginDetailsRepository from "../repositories/auth/LoginDetailsRepository.js";
 
 const authRepo = new userRepository();
 const loginDetailRepo = new LoginDetailsRepository();

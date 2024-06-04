@@ -1,5 +1,5 @@
 import Joi from "joi";
-import userRepository from "../../repositories/userRepository.js";
+import userRepository from "../../repositories/employee/userRepository.js";
 import checkPermissions from "../../utils/checkPermission.js";
 
 class UpdateEmployeeRequest {

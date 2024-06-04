@@ -1,4 +1,4 @@
-import userRepository from "../repositories/userRepository.js";
+import userRepository from "../repositories/employee/userRepository.js";
 import addUserRequest from "../requests/user/addUserRequest.js";
 import UpdateEmployeeRequest from "../requests/user/updateUserRequest.js";
 import checkPermissions from "../utils/checkPermission.js";
@@ -88,23 +88,18 @@ export default class UserController {
 
   async registerUser(req, res) {
     try {
-      const user = req.session.user;
-      const hasPermission = await checkPermissions(user, "employee-create");
+      // const user = req.session.user;
+      // const hasPermission = await checkPermissions(user, "employee-create");
 
-      if (!hasPermission) {
-        return res.status(401).json({
-          status: false,
-          message: "You do not have permission to add an employee.",
-        });
-      }
+      // if (!hasPermission) {
+      //   return res.status(401).json({
+      //     status: false,
+      //     message: "You do not have permission to add an employee.",
+      //   });
+      // }
 
       const validatedData = await new addUserRequest(req).validate();
-      validatedData["permissions"] = [
-        "product-create",
-        "product-view",
-        "product-delete",
-        "product-update",
-      ];
+     
       const employeeDetails = await userRepo.addEmployee(validatedData);
       if (employeeDetails) {
         res.status(200).json({
