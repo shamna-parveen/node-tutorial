@@ -1,6 +1,7 @@
 import AddProductRequest from "../requests/product/addProductRequest.js";
 import ProductRepository from "../repositories/product/productRepository.js";
 import DeleteProductRequest from "../requests/product/deleteproductRequest.js";
+import ProductResponse from "../responses/productResponse.js"
 
 const productRepo = new ProductRepository();
 
@@ -67,11 +68,15 @@ export default class productControllers {
         file_path: file.path,
       }));
 
-      await productRepo.createProductFiles(productFiles);
+      const savedProductFiles = await productRepo.createProductFiles(productFiles);
 
-      res
-        .status(201)
-        .json({ message: "Product and images saved successfully" });
+      // Format the response
+      const formattedResponse = await ProductResponse.format(savedProduct, savedProductFiles);
+
+      res.status(201).json({
+        message: "Product and images saved successfully",
+        data: formattedResponse,
+      });
     } catch (error) {
       console.log(error);
       res.status(400).json({ errors: error.message });
