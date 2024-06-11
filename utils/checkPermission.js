@@ -8,7 +8,9 @@ const checkPermissions = async (user, requiredPermission) => {
         if (role.name === 'Super Admin') {
           return true; // Super Admin has all permissions
         }
-        return role.permissions.includes(requiredPermission);
+        else{
+          return role.permissions.includes(requiredPermission);
+        }
       }
     } catch (error) {
       console.error('Error checking permissions:', error);

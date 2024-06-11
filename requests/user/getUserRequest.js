@@ -1,5 +1,5 @@
 import Joi from "joi";
-import UserRepository from "../../repositories/userRepository.js";
+import UserRepository from "../../repositories/employee/userRepository.js";
 import checkPermissions from "../../utils/checkPermission.js";
 
 const userRepo = new UserRepository();

@@ -7,7 +7,7 @@ const employeeSeeder = async () => {
     email: "info@example.com",
     password: "Admin@123,.",
     role_id: null, // Initializing role_id to null
-    permissions: ["employee-create", "employee-update", "employee-delete", "employee-view", "product-create", "product-view", "product-delete", "product-update"],
+    // permissions: ["employee-create", "employee-update", "employee-delete", "employee-view", "product-create", "product-view", "product-delete", "product-update"],
   };
 
   try {

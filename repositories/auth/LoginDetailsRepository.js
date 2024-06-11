@@ -1,4 +1,4 @@
-import LoginDetail from '../models/LoginDetail.js';
+import LoginDetail from '../../models/LoginDetail.js';
 
 export default class LoginDetailsRepository {
   async addLoginDetails(userId, email, status, token) {
